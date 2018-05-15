@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MonopolyDeal")]
+[assembly: AssemblyTitle("MonopolyDeal.Test")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("MonopolyDeal")]
-[assembly: AssemblyCopyright("Copyright © Delcoco 2018")]
+[assembly: AssemblyProduct("MonopolyDeal.Test")]
+[assembly: AssemblyCopyright("Copyright © Microsoft 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("9c0d93c9-10da-47b3-b13d-a8612b6e117a")]
+[assembly: Guid("a9a96437-617b-4b1a-9251-a63b243ef514")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -10,6 +10,11 @@ namespace MonopolyDeal
     {
         static void Main(string[] args)
         {
+            CardDeck cards = new CardDeck();
+            foreach(Card card in cards.deck)
+            {
+                Console.WriteLine(card.CardDescription());
+            }        
         }
     }
 }
