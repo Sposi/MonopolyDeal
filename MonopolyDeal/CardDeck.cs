@@ -7,20 +7,19 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace MonopolyDeal
 {
-    class CardDeck
+    public class CardDeck
     {
         public CardDeck()
         {
             deck = new Card[106];
-            populateDeck();
+            PopulateDeck();
         }
 
-        private void populateDeck()
+        private void PopulateDeck()
         {
             string configPath = @"MonopolyDealConfig.csv";
             int index = 0;                    
 
-            // Read in csv and create card
             using (TextFieldParser csvParser = new TextFieldParser(configPath))
             {
                 csvParser.SetDelimiters(new string[] { "," });
@@ -45,9 +44,25 @@ namespace MonopolyDeal
             numCards = 106;
         }
 
-        //method to shuffle deck
+        public void ShuffleDeck()
+        {
+            Random randGenerator = new Random();            
 
-        //method to deal card
+            for (int nextCard = 0; nextCard < numCards - 1; nextCard++)
+            {
+                int randNum = randGenerator.Next(nextCard, numCards);
+                Card temp = deck[nextCard];
+                deck[nextCard] = deck[randNum];
+                deck[randNum] = temp;
+            }
+        }
+
+        public Card DealCard()
+        {
+            if (numCards == 0) { return null; }
+            numCards--;
+            return deck[numCards];
+        }
 
         public Card[] deck;
         public int numCards { get; set; }

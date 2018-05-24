@@ -47,11 +47,10 @@
     <Compile Include="Card.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="CardDeck.cs" />
+    <Compile Include="Pile.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="PlayerHand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertySet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
