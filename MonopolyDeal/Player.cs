@@ -25,6 +25,11 @@ namespace MonopolyDeal
             }
         }       
 
+        public void BankCard()
+        {
+
+        }
+
         // method for playing action card
 
         // method for paying player

@@ -24,7 +24,9 @@ namespace MonopolyDeal
                 for(int i = 0; i < numOfPlayers; i++)
                 {
                     Console.WriteLine($"It is {playerArray[i].Name}'s turn.");
+                    Console.WriteLine($"{handArray[i].getSize()} cards in hand.");
                     TurnLoop(playerArray[i], i);
+                
                 }
             } while (TheWinner == null);
         }
@@ -116,9 +118,20 @@ namespace MonopolyDeal
 
         public void TurnLoop(Player player, int iPlayer)
         {
-            player.DrawCards(2, handArray[iPlayer], deck);
+            // If no cards left in hand, draw 5 cards.  Otherwise draw 2.
+            if (handArray[iPlayer].getSize() < 1)
+            {
+                player.DrawCards(5, handArray[iPlayer], deck);
+            }
+            else
+            {
+                player.DrawCards(2, handArray[iPlayer], deck);
+            }
+            
             Console.WriteLine("You have drawn two cards from the deck.");
             int numOfActions = 3;
+            int bankCard = 0;
+            bool bankCardSelected = false;
             string response = "";
             do
             {
@@ -136,7 +149,11 @@ namespace MonopolyDeal
                                           "'show board'        - displays other player's laid down cards\n" +
                                           "'show actions'      - displays the number of actions available to player\n" +
                                           "'nothing'           - skips your action\n" +
-                                          "'show bank'         - displays your bank value");
+                                          "'show bank'         - displays your bank value\n" +
+                                          "'hand card count'   - number of cards in hand");
+                        break;
+                    case "hand card count":
+                        Console.WriteLine($"You have {handArray[iPlayer].getSize()} cards in hand.");
                         break;
                     case "show hand":
                         foreach(Card card in handArray[iPlayer].CardPile)
@@ -154,11 +171,9 @@ namespace MonopolyDeal
                         numOfActions--;
                         break;
                     case "bank":
+                        // Only create bank here if not exists already
                         bankArray[iPlayer] = new Pile(player.Name, "Bank");
                         Console.WriteLine("What card would you like to bank?");
-                        foreach(Card card in handArray[iPlayer].CardPile)
-                        {
-                        }
                         for(int j = 0; j < handArray[iPlayer].getSize() ; j++)
                         {
                             if (handArray[iPlayer].CardPile[j] != null && 
@@ -168,6 +183,19 @@ namespace MonopolyDeal
                                 Console.WriteLine($"{j} {handArray[iPlayer].CardPile[j].GetCardDescription()}");
                             }
                         }
+                        do
+                        {
+                            try
+                            {
+                                bankCard = Int32.Parse(Console.ReadLine());
+                                bankCardSelected = true;
+                            }
+                            catch
+                            {
+                                Console.WriteLine("Oops! Just type the number of the card you'd like to bank.");
+                            }
+                        } while (bankCardSelected == false);
+
                         numOfActions--;
                         break;
                     case "show board":
