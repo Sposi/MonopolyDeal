@@ -56,13 +56,13 @@ namespace MonopolyDeal.Test
                 }
                 else
                 {
-                    discard.addCard(card);
+                    discard.AddCard(card);
                 }
             }
-            property.addCard(card);
+            property.AddCard(card);
             player1.DrawCards(2, myHand, deck);
 
-            Assert.AreEqual(106,deck.numCards + discard.getSize() + property.getSize() + myHand.getSize());
+            Assert.AreEqual(106,deck.numCards + discard.GetSize() + property.GetSize() + myHand.GetSize());
 
         }
 

@@ -10,47 +10,24 @@ namespace MonopolyDeal
     {
         public Pile(string player, string type)
         {
-            CardPile = new Card[106];
+            CardPile = new List<Card>();
             Owner = player;
             Type = type;
-            Front = 0;
-            End = 0;
         }
 
-        public int getSize()
+        public int GetSize()
         {
-            return End - Front;
+            return CardPile.Count;
         }
 
-        public void clear()
+        public void AddCard(Card cardToAdd)
         {
-            Front = 0;
-            End = 0;
+            CardPile.Add(cardToAdd);
         }
 
-        public void addCard(Card cardToAdd)
+        public void RemoveCard(Card cardToRemove)
         {
-            CardPile[End] = cardToAdd;
-            End++;
-        }
-
-        public void addCards(Pile pileToAdd)
-        {
-            while (pileToAdd.getSize() > 0)
-            {
-                addCard(pileToAdd.nextCard());
-            }
-        }
-
-        public Card nextCard()
-        {
-            if (Front == End)
-            {
-                return null;
-            }
-            Card cardToReturn = CardPile[Front];
-            Front++;
-            return cardToReturn;
+            CardPile.Remove(cardToRemove);
         }
 
         public string GetCardsInPile()
@@ -86,11 +63,21 @@ namespace MonopolyDeal
             return value;
         }
 
+        public void ShowCards(Pile pile)
+        {
+            foreach(Card card in pile.CardPile)
+            {
+                if ( card != null )
+                {
+                    Console.WriteLine(card.GetCardDescription());
+                }
+            }
+        }
 
-        public Card[] CardPile { get; set; }
-        public string Owner    { get; set; }
-        public string Type     { get; set; }
-        public int    Front    { get; set; }
-        public int    End      { get; set; }
+        public List<Card> CardPile { get; set; }
+        public string Owner        { get; set; }
+        public string Type         { get; set; }
+        public int    Front        { get; set; }
+        public int    End          { get; set; }
     }
 }

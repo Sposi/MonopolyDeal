@@ -21,7 +21,7 @@ namespace MonopolyDeal
             for (int i = 0; i < numOfCards; i++)
             {
                 temp = deck.DealCard();
-                playerHand.addCard(temp);
+                playerHand.AddCard(temp);
             }
         }       
 

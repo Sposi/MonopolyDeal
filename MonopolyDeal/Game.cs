@@ -18,15 +18,14 @@ namespace MonopolyDeal
             Welcome();
             deck.ShuffleDeck();
             SetupPlayers();
-            DealPlayersInitialHand();            
+            DealPlayersInitialHand();
             do
             {
-                for(int i = 0; i < numOfPlayers; i++)
+                for (int i = 0; i < numOfPlayers; i++)
                 {
                     Console.WriteLine($"It is {playerArray[i].Name}'s turn.");
-                    Console.WriteLine($"{handArray[i].getSize()} cards in hand.");
                     TurnLoop(playerArray[i], i);
-                
+
                 }
             } while (TheWinner == null);
         }
@@ -77,6 +76,7 @@ namespace MonopolyDeal
                 players[i] = Console.ReadLine();
                 playerArray[i] = new Player(players[i]);
                 handArray[i] = new Pile(playerArray[i].Name, "Hand");
+                bankArray[i] = new Pile(playerArray[i].Name, "Bank");
             }
         }
 
@@ -104,13 +104,7 @@ namespace MonopolyDeal
                 if (hand != null)
                 {
                     Console.WriteLine($"All cards in {hand.Owner}'s hand:");
-                    foreach (Card card in hand.CardPile)
-                    {
-                        if (card != null)
-                        {
-                            Console.WriteLine(card.GetCardDescription());
-                        }
-                    }
+                    hand.ShowCards(hand);
                     Console.WriteLine("");
                 }                
             }
@@ -119,7 +113,7 @@ namespace MonopolyDeal
         public void TurnLoop(Player player, int iPlayer)
         {
             // If no cards left in hand, draw 5 cards.  Otherwise draw 2.
-            if (handArray[iPlayer].getSize() < 1)
+            if (handArray[iPlayer].GetSize() < 1)
             {
                 player.DrawCards(5, handArray[iPlayer], deck);
             }
@@ -141,43 +135,25 @@ namespace MonopolyDeal
                 switch(response)
                 {
                     case "help":
-                        Console.WriteLine("'show hand'         - displays cards currently in your hand\n" +
+                        Console.WriteLine("'bank'              - displays options for banking money\n" +
+                                          "'lay down property' - displays options for laying down a property card\n" +
                                           "'play action'       - displays options for playing action card\n" +
-                                          "'lay down property' - lays down a property card\n" +
-                                          "'bank'              - displays options for banking money\n" +
-                                          "'help'              - displays help menu\n" +
-                                          "'show board'        - displays other player's laid down cards\n" +
+                                          "'show hand'         - displays cards currently in your hand\n" +
+                                          "'show board'        - displays other player's laid down cards\n" +                                          
+                                          "'show bank value'   - displays your bank value\n" +
+                                          "'show properties'   - displays your properties\n" +
                                           "'show actions'      - displays the number of actions available to player\n" +
-                                          "'nothing'           - skips your action\n" +
-                                          "'show bank'         - displays your bank value\n" +
-                                          "'hand card count'   - number of cards in hand");
-                        break;
-                    case "hand card count":
-                        Console.WriteLine($"You have {handArray[iPlayer].getSize()} cards in hand.");
-                        break;
-                    case "show hand":
-                        foreach(Card card in handArray[iPlayer].CardPile)
-                        {
-                            if (card != null)
-                            {
-                                Console.WriteLine(card.GetCardDescription());
-                            }
-                        }
-                        break;
-                    case "play action":
-                        numOfActions--;
-                        break;
-                    case "lay down property":
-                        numOfActions--;
+                                          "'hand count'        - number of cards in hand\n" +
+                                          "'bank count'        - number of cards in bank\n" +
+                                          "'help'              - displays help menu\n" +                                                                                    
+                                          "'nothing'           - skips your action\n");
                         break;
                     case "bank":
-                        // Only create bank here if not exists already
-                        bankArray[iPlayer] = new Pile(player.Name, "Bank");
                         Console.WriteLine("What card would you like to bank?");
-                        for(int j = 0; j < handArray[iPlayer].getSize() ; j++)
+                        for (int j = 0; j < handArray[iPlayer].GetSize(); j++)
                         {
-                            if (handArray[iPlayer].CardPile[j] != null && 
-                                handArray[iPlayer].CardPile[j].Type == "Action" || 
+                            if (handArray[iPlayer].CardPile[j] != null &&
+                                handArray[iPlayer].CardPile[j].Type == "Action" ||
                                 handArray[iPlayer].CardPile[j].Type == "Cash" ||
                                 handArray[iPlayer].CardPile[j].Type == "")
                             {
@@ -196,12 +172,36 @@ namespace MonopolyDeal
                                 Console.WriteLine("Oops! Just type the number of the card you'd like to bank.");
                             }
                         } while (bankCardSelected == false);
-
+                        // Put selected card in bank
+                        bankArray[iPlayer].AddCard(handArray[iPlayer].CardPile[bankCard]);
+                        // and remove from hand
+                        handArray[iPlayer].RemoveCard(handArray[iPlayer].CardPile[bankCard]);
                         numOfActions--;
                         break;
+                    case "lay down property":
+                        numOfActions--;
+                        break;
+                    case "play action":
+                        numOfActions--;
+                        break;
+                    case "hand count":
+                        Console.WriteLine($"You have {handArray[iPlayer].GetSize()} card(s) in your hand.");
+                        break;
+                    case "bank count":
+                        Console.WriteLine($"You have {bankArray[iPlayer].GetSize()} card(s) in your bank.");
+                        break;
+                    case "show hand":
+                        foreach(Card card in handArray[iPlayer].CardPile)
+                        {
+                            if (card != null)
+                            {
+                                Console.WriteLine(card.GetCardDescription());
+                            }
+                        }
+                        break;                                       
                     case "show board":
                         break;
-                    case "show bank":
+                    case "show bank value":
                         break;
                     case "show actions":
                         Console.WriteLine($"You have {numOfActions} actions left.");
