@@ -178,6 +178,7 @@ namespace MonopolyDeal
                         {
                             if (handArray[iPlayer].CardPile[j] != null && 
                                 handArray[iPlayer].CardPile[j].Type == "Action" || 
+                                handArray[iPlayer].CardPile[j].Type == "Cash" ||
                                 handArray[iPlayer].CardPile[j].Type == "")
                             {
                                 Console.WriteLine($"{j} {handArray[iPlayer].CardPile[j].GetCardDescription()}");
