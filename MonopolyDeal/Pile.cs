@@ -44,14 +44,9 @@ namespace MonopolyDeal
             return returnString;
         }
 
-        public int GetTotalBankValue()
+        public string GetTotalValue()
         {
             int value = 0;
-            if (Type != "Bank" )
-            {
-                return 0;
-            }
-            
             foreach (Card item in CardPile)
             {
                 if (item != null)
@@ -60,12 +55,12 @@ namespace MonopolyDeal
                 }
                 
             }
-            return value;
+            return $"{value} million";
         }
 
-        public void ShowCards(Pile pile)
+        public void ShowCards()
         {
-            foreach(Card card in pile.CardPile)
+            foreach(Card card in CardPile)
             {
                 if ( card != null )
                 {
