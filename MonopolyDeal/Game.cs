@@ -186,30 +186,52 @@ namespace MonopolyDeal
                         break;
                     case "lay down property":
                         Console.WriteLine("What property would you like to lay down?");
-                        for (int j = 0; j < handArray[iPlayer].GetSize(); j++)
+
+                        var queryPropertyCards = from card in handArray[iPlayer].CardPile
+                                                 where card.Type == "Property" ||
+                                                       card.Type == "Wild" ||
+                                                       card.Type == ""
+                                                 select card;
+
+                        for (int j = 0; j < queryPropertyCards.ToArray().Count(); j++)
                         {
-                            if (handArray[iPlayer].CardPile[j] != null &&
-                                handArray[iPlayer].CardPile[j].Type == "Property" ||
-                                handArray[iPlayer].CardPile[j].Type == "Wild" ||
-                                handArray[iPlayer].CardPile[j].Type == "")
-                            {
-                                Console.WriteLine($"{j} {handArray[iPlayer].CardPile[j].GetCardDescription()}");
-                            }
+                            Console.WriteLine($"{j} - {queryPropertyCards.ToArray()[j].GetCardDescription()}");
                         }
+
                         do
                         {
                             try
                             {
                                 selectedCard = Int32.Parse(Console.ReadLine());
-                                cardSelected = true;
                             }
                             catch
                             {
                                 Console.WriteLine("Oops! Just type the number of the card you'd like to bank.");
                             }
+
+                            Console.WriteLine($"You selected {queryPropertyCards.ToArray()[selectedCard].GetCardDescription()}");
+
+                            var queryHandForProperty = from   handCard in handArray[iPlayer].CardPile
+                                                       where  handCard == queryPropertyCards.ToArray()[selectedCard]
+                                                       select handCard;
+
+                            Console.WriteLine($"You selected {queryHandForProperty}"); // <-- need way to access actual object, no IEnumerable
+
+                            //var queryHandForProperty = from handCard in handArray[iPlayer].CardPile
+                            //                           join propertyCard in queryPropertyCards
+                            //                           on handCard.Card_ID equals propertyCard.Card_ID
+                            //                           select handCard;
+
+                            //foreach(Card card in queryHandForProperty)
+                            //{
+                            //    Console.WriteLine(card.GetCardDescription());
+                            //}
+
+                            cardSelected = true;
+                                                       
                         } while (cardSelected == false);
                         // debug
-                        Console.WriteLine($"You selected {handArray[iPlayer].CardPile[selectedCard].Title} card to lay down.");
+                        Console.WriteLine($"You selected {handArray[iPlayer].CardPile[selectedCard].GetCardDescription()} to lay down.");
                         // lync query for any properties of same color and not full
                         // if avail, add to existing
                         // if  not avail, create new property pile                        

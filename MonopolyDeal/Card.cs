@@ -15,16 +15,18 @@ namespace MonopolyDeal
             Value = 0;
             Color = "";
             Action = "";
+            Card_ID = 0;
         }
 
         public Card(string type, string title, int value,
-                    string color, string action)
+                    string color, string action, int id)
         {
             Type = type;
             Title = title;
             Value = value;
             Color = color;
             Action = action;
+            Card_ID = id;
 
             SetAttributes();
         }
@@ -132,11 +134,12 @@ namespace MonopolyDeal
             return currentCard.Color == cardToCompare.Color;
         }
 
-        public string Type   { get; set; }
-        public string Title  { get; set; }        
-        public int    Value  { get; set; }
-        public string Color  { get; set; }
-        public string Action { get; set; }
+        public string Type    { get; set; }
+        public string Title   { get; set; }        
+        public int    Value   { get; set; }
+        public string Color   { get; set; }
+        public string Action  { get; set; }
+        public int    Card_ID { get; set; }
 
         public int    TotalProperties { get; set; }
         public int[]  Rent            { get; set; }

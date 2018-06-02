@@ -35,8 +35,9 @@ namespace MonopolyDeal
                     int       value = Int32.Parse(fields[2]);
                     string    color = fields[3];
                     string   action = fields[4];
+                    int     card_id = Int32.Parse(fields[5]);
 
-                    deck[index] = new Card(type, title, value, color, action);
+                    deck[index] = new Card(type, title, value, color, action, card_id);
                     index++;
                 }
             }
