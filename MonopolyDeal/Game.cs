@@ -77,6 +77,7 @@ namespace MonopolyDeal
                 playerArray[i] = new Player(players[i]);
                 handArray[i] = new Pile(playerArray[i].Name, "Hand");
                 bankArray[i] = new Pile(playerArray[i].Name, "Bank");
+                propertyArray[i] = new List<PropertySet>();
             }
         }
 
@@ -203,42 +204,58 @@ namespace MonopolyDeal
                             try
                             {
                                 selectedCard = Int32.Parse(Console.ReadLine());
+                                cardSelected = true;
                             }
                             catch
                             {
                                 Console.WriteLine("Oops! Just type the number of the card you'd like to bank.");
                             }
 
-                            Console.WriteLine($"You selected {queryPropertyCards.ToArray()[selectedCard].GetCardDescription()}");
-
-                            var queryHandForProperty = from   handCard in handArray[iPlayer].CardPile
-                                                       where  handCard == queryPropertyCards.ToArray()[selectedCard]
-                                                       select handCard;
-
-                            Console.WriteLine($"You selected {queryHandForProperty}"); // <-- need way to access actual object, no IEnumerable
-
-                            //var queryHandForProperty = from handCard in handArray[iPlayer].CardPile
-                            //                           join propertyCard in queryPropertyCards
-                            //                           on handCard.Card_ID equals propertyCard.Card_ID
-                            //                           select handCard;
-
-                            //foreach(Card card in queryHandForProperty)
-                            //{
-                            //    Console.WriteLine(card.GetCardDescription());
-                            //}
-
-                            cardSelected = true;
-                                                       
                         } while (cardSelected == false);
-                        // debug
-                        Console.WriteLine($"You selected {handArray[iPlayer].CardPile[selectedCard].GetCardDescription()} to lay down.");
-                        // lync query for any properties of same color and not full
-                        // if avail, add to existing
-                        // if  not avail, create new property pile                        
+
+                        Console.WriteLine($"You selected {queryPropertyCards.ToArray()[selectedCard].GetCardDescription()}");
+
+                        var queryHandForProperty = from   handCard in handArray[iPlayer].CardPile
+                                                   where  handCard == queryPropertyCards.ToArray()[selectedCard]
+                                                   select handCard;                            
+
+                        // query should only return one record, so grab first record
+                        // Console.WriteLine($"You selected {queryHandForProperty.ToArray()[0].GetCardDescription()}");
+
+                        // query for any properties of same color and not full
+                        bool addedToExisting = false;
+                        for(int i = 0; i < propertyArray[iPlayer].Count(); i++)
+                        {
+                            var propertyQuery = from   propertySet in propertyArray[iPlayer][i].CardPile
+                                                where  propertyArray[iPlayer][i].Color    == queryHandForProperty.ToArray()[0].Color &&
+                                                       propertyArray[iPlayer][i].GetSize() < propertyArray[iPlayer][i].Capacity
+                                                select propertySet;
+                            // if avail, add to existing
+                            if (propertyQuery.Count() > 0 )
+                            {
+                                propertyArray[iPlayer][i].AddCard(queryPropertyCards.ToArray()[selectedCard]);
+                                addedToExisting = true;
+                                break;
+                            }
+                        }
+
+                        // if  not avail, create new property pile
+                        if (!addedToExisting)
+                        {
+                            // create property set
+                            propertyArray[iPlayer].Add(new PropertySet(playerArray[iPlayer].Name,"Property",queryHandForProperty.ToArray()[0].Color));
+                            // add to property set
+                            propertyArray[iPlayer].Last().AddCard(queryPropertyCards.ToArray()[selectedCard]);
+                            // remove from hand
+                            handArray[iPlayer].RemoveCard(queryPropertyCards.ToArray()[selectedCard]);
+                        }
+                                                
                         numOfActions--;
+
                         // reset variables
                         selectedCard = 0;
                         cardSelected = false;
+                        addedToExisting = false;
                         break;
                     case "play action":
                         numOfActions--;
@@ -255,6 +272,14 @@ namespace MonopolyDeal
                         Console.WriteLine($"You have {bankArray[iPlayer].GetTotalValue()} in the bank.");
                         break;
                     case "show properties":
+                        foreach(PropertySet property in propertyArray[iPlayer])
+                        {
+                            Console.WriteLine($"Cards in {property.Color} set:\n");
+                            foreach(Card card in property.CardPile)
+                            {
+                                Console.WriteLine(card.GetCardDescription());
+                            }
+                        }
                         break;
                     case "show actions":
                         Console.WriteLine($"You have {numOfActions} actions left.");
@@ -281,7 +306,8 @@ namespace MonopolyDeal
         public Player[] playerArray = new Player[5];
         public Pile[] handArray     = new Pile[5];
         public Pile[] bankArray     = new Pile[5];
-        public Pile[] propertyArray = new Pile[28];
+
+        List<PropertySet>[] propertyArray = new List<PropertySet>[5];
         public string TheWinner;
     }
 }
